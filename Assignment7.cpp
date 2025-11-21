@@ -371,6 +371,32 @@ int main() {
         stmt = nullptr; // reset pointer
         delete con; // delete connection object
         con = nullptr; // reset pointer
+        }
+
+    catch (sql::SQLException &e) { // Catch MySQL-specific exceptions
+        std::cerr << "SQL error: " << e.what() << std::endl; // Print SQL error message
+    }
+    catch (std::exception &e) {    // Catch standard library exceptions
+        std::cerr << "Standard exception: " << e.what() << std::endl; // Print error message
+    }
+    catch (...) { // Catch any other unexpected exceptions
+        std::cerr << "Unknown exception occurred." << std::endl; // Generic error message
+    }
+
+    // --------- Final clean-up in case an exception occurred before deletion ---------
+    if (res != nullptr) { // If result set pointer is not null
+        delete res;       // Delete result set object
+        res = nullptr;    // Reset pointer
+    }
+
+    if (stmt != nullptr) { // If statement pointer is not null
+        delete stmt;       // Delete statement object
+        stmt = nullptr;    // Reset pointer
+    }
+
+    if (con != nullptr) {  // If connection pointer is not null
+        delete con;        // Delete connection object
+        con = nullptr;     // Reset pointer
     }
     return 0;
 }
